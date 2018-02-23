@@ -1,0 +1,135 @@
+from collections import deque
+
+class Node:
+    def __init__(self, name, arc, value, children):
+        self.name = name
+        self.arc = arc 
+        self.value = value
+        self.children = children
+
+class Message:
+    def __init__(self, name, messageValue):
+        self.name = name
+        self.messageValue = messageValue
+
+################# Iniciating objects ######################
+# no15 = Node("5.8", "none", None, [])
+
+# no14 = Node("5.7", "none", None, [])
+
+# no13 = Node("5.6", "none", None, [])
+
+# no12 = Node("5.5", "none", None, [])
+
+# no11 = Node("5.4", "none", None, [])
+
+# no10 = Node("5.3", "none", None, [])
+
+# no9 = Node("5.2", "none", None, [])
+
+# no8 = Node("5.1", "none", None, [])
+
+# no7 = Node("4.4", "and", None, [no14,no15])
+
+no6 = Node("4.3", "none", None, [])
+
+no5 = Node("4.2", "none", None, [])
+
+no4 = Node("4.1", "none", None, [])
+
+no3 = Node("3.2", "or", None, [no6])
+
+no2 = Node("3.1", "or", None, [no4, no5])
+
+no1 = Node("2.1", "and", None, [no2, no3])
+
+
+message = Message("4.1", True)
+
+message2 = Message("4.2", True)
+
+message3 = Message("4.3", False)
+
+# message4 = Message("5.4", False)
+
+# message5 = Message("5.5", True)
+
+# message6 = Message("5.6", False)
+
+# message7 = Message("5.7", True)
+
+# message8 = Message("5.8", False)
+#############################################################
+
+node_list = [no1, no2, no3, no4, no5, no6]
+message_list = [message, message2, message3]
+branch_list = []
+children_list = []
+positives_list = []
+leaf_list = []
+stack = deque([])
+children_values = []
+
+
+
+############## METHODS ###############
+def ExecMessage(message_list, leaf_list):
+    for msg in message_list:
+            for leaf in leaf_list:
+                if msg.name == leaf.name:
+                    leaf.value = msg.messageValue
+
+def CheckLastInStack(stack, node):
+    stack.append(node)
+    print("Inicio da funcao ", stack[-1].name)
+    if node.value == None:
+        print("depois do if ", stack[-1].name)
+        for chdr in node.children:
+            print("depois do for ", chdr.name)
+            CheckLastInStack(stack, chdr)
+            if chdr in leaf_list:
+                CheckLastInStack(stack, chdr)
+                print("depois do for if  ", chdr.name)
+            else:
+                break
+                
+                
+
+            
+    else:
+        children_values.append(node.value)
+        for e in stack:
+            print("pilha no momento da folha ", e.name)
+        stack.pop()
+        leaf_list.remove(node)
+        
+        for u in stack:
+            print("pilha depois do pop ", u.name)
+
+        
+        for c in children_values:
+            print(c)
+    
+
+######################################
+
+###Rever essa função depois
+while any(item.value == None for item in node_list):
+    for node in node_list:
+        if len(node.children) == 0:
+            leaf_list.append(node)
+
+    ExecMessage(message_list, leaf_list)
+
+    for node in node_list:
+        CheckLastInStack(stack, node)
+        
+
+
+    
+  
+      
+
+        
+        
+        
