@@ -12,57 +12,76 @@ class Message:
         self.name = name
         self.messageValue = messageValue
 
+class Pilha(object):
+    def __init__(self):
+        self.dados = []
+
+    def empilha(self, elemento):
+        self.dados.append(elemento)
+
+    def desempilha(self):
+        if not self.vazia():
+            return self.dados.pop(-1)
+    
+    def vazia(self):
+        return len(self.dados) == 0
+
+
 ################# Iniciating objects ######################
-# no15 = Node("5.8", "none", None, [])
+no22 = Node("5.9", "none", None, [])
 
-# no14 = Node("5.7", "none", None, [])
+no21 = Node("5.8", "none", None, [])
 
-# no13 = Node("5.6", "none", None, [])
+no20 = Node("5.7", "none", None, [])
 
-# no12 = Node("5.5", "none", None, [])
+no19 = Node("5.6", "none", None, [])
 
-# no11 = Node("5.4", "none", None, [])
+no18 = Node("5.5", "none", None, [])
 
-# no10 = Node("5.3", "none", None, [])
+no17 = Node("5.4", "none", None, [])
 
-# no9 = Node("5.2", "none", None, [])
+no16 = Node("5.3", "none", None, [])
 
-# no8 = Node("5.1", "none", None, [])
+no15 = Node("5.2", "none", None, [])
 
-# no7 = Node("4.4", "and", None, [no14,no15])
+no14 = Node("5.1", "none", None, [])
 
-no6 = Node("4.3", "none", None, [])
+no13 = Node("4.6", "and", None, [no21,no22])
+no12 = Node("4.5", "or", None, [no20])
+no11 = Node("4.4", "or", None, [no19])
+no10 = Node("4.3", "and", None, [no17,no18])
+no9 = Node("4.2", "none", None, [])
+no8 = Node("4.1", "or", None, [no14, no15, no16])
 
-no5 = Node("4.2", "none", None, [])
+no7 = Node("3.4", "and", None, [no13])
 
-no4 = Node("4.1", "none", None, [])
+no6 = Node("3.3", "or", None, [no12])
 
-no3 = Node("3.2", "or", None, [no6])
+no5 = Node("3.2", "and", None, [no10, no11])
 
-no2 = Node("3.1", "or", None, [no4, no5])
+no4 = Node("3.1", "or", None, [no8, no9])
 
-no1 = Node("2.1", "and", None, [no2, no3])
+no3 = Node("2.2", "and", None, [no7])
+
+no2 = Node("2.1", "and", None, [no4, no5, no6])
+
+no1 = Node("1", "or", None, [no2, no3])
 
 
-message = Message("4.1", True)
-
-message2 = Message("4.2", True)
-
-message3 = Message("4.3", False)
-
-# message4 = Message("5.4", False)
-
-# message5 = Message("5.5", True)
-
-# message6 = Message("5.6", False)
-
-# message7 = Message("5.7", True)
-
-# message8 = Message("5.8", False)
+message = Message("5.1", True)
+message2 = Message("5.2", False)
+message3 = Message("5.3", False)
+message4 = Message("5.4", False)
+message5 = Message("5.5", True)
+message6 = Message("5.6", True)
+message7 = Message("5.7", False)
+message8 = Message("5.8", True)
+message9 = Message("5.9", False)
+message10 = Message("4.2", True)
 #############################################################
 
-node_list = [no1, no2, no3, no4, no5, no6]
-message_list = [message, message2, message3]
+node_list = [no1, no2, no3, no4, no5, no6, no8, no9, no10, no11, no12,no13,no14,no15,no16,no17,no18,no19,no20,no21,no22]
+message_list = [message, message2, message3, message4,message5,message6,message7,message8,message9,message10]
 branch_list = []
 children_list = []
 positives_list = []
@@ -80,14 +99,19 @@ def ExecMessage(message_list, leaf_list):
                 if msg.name == leaf.name:
                     leaf.value = msg.messageValue
 
+def teste(_pilha, node):
+    _pilha.desempilha()
+    CheckLastInStack(node)
 
 
-def CheckLastInStack(stack, node):
+def CheckLastInStack(node):
+    
+    listaTeste[:] = []
     print("INICIANDO FUNÇÃO CHECK PARA VALOR DE NO", node.name)
-    print("ADICIONANDO NODE NA PILHA", node.name)
-    stack.append(node)
+    print("VALOR DO NO", node.value)
 
-    for x in stack:
+
+    for x in p.dados:
         print("PILHA CONTEM:", x.name)
     
     if node.value == None:
@@ -99,24 +123,46 @@ def CheckLastInStack(stack, node):
                 listaTeste.append("Ok")
             else:
                 listaTeste.append("N")
+                print("ADICIONANDO NODE NA PILHA", node.name)
+                p.empilha(filho)
+                CheckLastInStack(filho)
         
-        if("N" not in listaTeste):
+        if all(x == "Ok" for x in listaTeste):
+            if node.arc == 'and':
+                for x in node.children:
+                    if x.value == False:
+                        node.value = False
+                        teste(p, node)
+                        break
+                else:
+                    node.value = True
+                    teste(p, node)
 
+            if node.arc == 'or':
+                for x in node.children:
+                    if x.value == True:
+                        node.value = True
+                        teste(p, node)
+                        break
+                    else:
+                        node.value = False
+                        teste(p, node)
 
-
-            
         
-    else:
-        print("O VALOR DO NO NAO EH NULO", node.name)
+    
 
-        print("ADICIONANDO VALOR DO NO NA LISTA DE VALORES", node.name, node.value)
-        children_values.append(node.value)
+ 
+    # else:
+    #     print("O VALOR DO NO NAO EH NULO", node.name)
 
-        print("REMOVENDO ULTIMO DA PILHA", node.name)
-        stack.pop()
+    #     print("ADICIONANDO VALOR DO NO NA LISTA DE VALORES", node.name, node.value)
+    #     children_values.append(node.value)
 
-        for x in stack:
-            print("PILHA APOS REMOCAO", x.name)
+    #     print("REMOVENDO ULTIMO DA PILHA", node.name)
+    #     stack.pop()
+
+    #     for x in stack:
+    #         print("PILHA APOS REMOCAO", x.name)
 
 
 
@@ -189,8 +235,12 @@ while any(item.value == None for item in node_list):
 
     ExecMessage(message_list, leaf_list)
 
+    p = Pilha()
     for node in node_list:
-        CheckLastInStack(stack, node)
+        print("ADICIONANDO NODE NA PILHA", node.name)
+        p.empilha(node)
+        CheckLastInStack(node)
+        break
         
 
         
