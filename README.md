@@ -11,28 +11,22 @@ O objetivo era criar uma árvore binária, recursiva e usando o conceito de pilh
 
 A árvore apresentada tem como função determinar o valor de seus nós - até o nó principal - em True ou False. Para isso, baseia-se em parte da tabela verdade usando somente as operações de conjunção(AND(ˆ)) ou disjunção(OR(v)):
 
-| A || B || A^B               
-|--------------
-| V || V || v
-|--------------
-| V || F || F
-|--------------
-| F || V || F
-|--------------
-| F || F || F
 
+| A | B | AˆB |
+|---|---|-----|
+| V | V |  V  |
+| V | F |  F  |
+| F | V |  F  |
+| F | F |  F  |
 
-| A || B || AvB               
-|--------------
-| V || V || v
-|--------------
-| V || F || v
-|--------------
-| F || V || v
-|--------------
-| F || F || F
+| A | B | AvB |
+|---|---|-----|
+| V | V |  V  |
+| V | F |  V  |
+| F | V |  V  |
+| F | F |  F  |
 
-#Author
+# Author
 
 * Mikael Schirru
 
