@@ -36,25 +36,25 @@ no21 = Node("5.5", "none", None, [])
 no20 = Node("5.4", "none", None, [])
 no19 = Node("5.3", "none", None, [])
 no18 = Node("5.2", "none", None, [])
-no17 = Node("5.1", "and", None, [no22])
+no17 = Node("5.1", "equal", None, [no22])
 
 no16 = Node("4.9", "none", None, [])
-no15 = Node("4.8", "and", None, [no21])
+no15 = Node("4.8", "equal", None, [no21])
 no14 = Node("4.7", "none", None, [])
 no13 = Node("4.6", "none", None, [])
-no12 = Node("4.5", "or", None, [no20])
+no12 = Node("4.5", "equal", None, [no20])
 no11 = Node("4.4", "or", None, [no18,no19])
 no10 = Node("4.3", "none", None, [])
 no9 = Node("4.2", "none", None, [])
-no8 = Node("4.1", "or", None, [no17])
+no8 = Node("4.1", "equal", None, [no17])
 
 no7 = Node("3.4", "and", None, [no14,no15,no16])
 no6 = Node("3.3", "or", None, [no12,no13])
-no5 = Node("3.2", "and", None, [no11])
+no5 = Node("3.2", "equal", None, [no11])
 no4 = Node("3.1", "or", None, [no8, no9, no10])
 
-no3 = Node("2.2", "and", None, [no7])
-no2 = Node("2.1", "and", None, [no4, no5, no6])
+no3 = Node("2.2", "equal", None, [no7])
+no2 = Node("2.1", "or", None, [no4, no5, no6])
 
 no1 = Node("1", "or", None, [no2, no3])
 
@@ -115,6 +115,18 @@ def CheckLastInStack(node):
                     positives_list.append(node)
                     RemoveFromStack(p, node)
 
+            if node.arc == 'equal':
+                for x in node.children:
+                    if x.value == True:
+                        node.value = True
+                        positives_list.append(node)
+                        RemoveFromStack(p, node)
+                        break
+                    else:
+                        node.value = False
+                        RemoveFromStack(p, node)
+                        
+
             if node.arc == 'or':
                 for x in node.children:
                     if x.value == True:
@@ -145,15 +157,3 @@ for node in node_list:
 print("Topo mais alto: ", node.name,node.value)
 for x in positives_list:
     print("Lista de positivos: ", x.name)
-
-
-        
-
-
-    
-  
-      
-
-        
-        
-        
